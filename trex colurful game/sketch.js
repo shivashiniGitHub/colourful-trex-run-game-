@@ -66,7 +66,7 @@ function setup(){
   trex.addAnimation("animatedTrex",trexRunning);
   trex.addAnimation("ended_trex",endTrex);
   trex.scale =0.6;    
-  trex.debug = true ;
+  trex.debug = false ;
   trex.setCollider("rectangle",0,0,75,75);
 
   invisibleGround = createSprite(300,windowHeight -100,600,5);
@@ -98,6 +98,13 @@ function draw(){
 
     if(gameState === PLAY){
 
+      
+    if((touches.length > 0 || keyDown("SPACE")) && trex.y  >=height-120) {
+      jumpSound.play();
+      trex.velocityY = -10;
+       touches = [];
+    }
+      
       spawnObstacles()
 
       if(ground.x < 0){
@@ -140,24 +147,26 @@ function draw(){
     trex.changeAnimation("ended_trex",endTrex);
 
     obstacleGroup.setLifetimeEach(-1);
+      
+    if(touches.length>0 || mousePressedOver(restart)) {      
+      regame();
+      touches = []
+    }
 
-      if(mousePressedOver(restart)) {
-         regame();
-      }
-  }
+    }
 
   drawSprites();  
 
   fill("red");
   textSize(20);
-  text("score : " + score,windowWidth -100,50);  
+  text("score : " + score,windowWidth -150,50);  
 
 }
 function spawnObstacles(){
    if (frameCount % 100 === 0){
      var obstacle = createSprite(600,windowHeight-140,10,40);
 
-     obstacle.velocityX = -(3 + 2* score/200);
+     obstacle.velocityX = -(3 + 2* score/400);
      
         var rand = Math.round(random(1,6));
         switch(rand) {
